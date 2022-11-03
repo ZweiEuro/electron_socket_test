@@ -1,0 +1,73 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Upload native",
+      "type": "shell",
+      "command": "ionic capacitor run android --external --target=R52R308M1FL"
+    },
+    {
+      "label": "Compile android apk",
+      "type": "shell",
+      "command": "ionic capacitor build android --no-open && cd android && ./gradlew assembleDebug && echo '==>> APK at ${workspaceFolder}/android/app/build/outputs/apk/debug/app-debug.apk' "
+    },
+    {
+      "label": "Serve android apk",
+      "type": "shell",
+
+      "command": "cd ${workspaceFolder}/android/app/build/outputs/apk/debug/ && npx serve",
+      "dependsOn": ["Compile android apk"]
+    },
+    {
+      "label": "Compile ios (MacOS only! Requires XCode to compile)",
+      "type": "shell",
+      "command": "ionic capacitor build ios"
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "ionic build"
+    },
+    {
+      "label": "sync electron",
+      "type": "shell",
+      "command": "npx cap sync @capacitor-community/electron"
+    },
+    {
+      "label": "setup electron",
+      "type": "shell",
+      "command": "npm i @capacitor-community/electron && npx cap add @capacitor-community/electron",
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "pack electron",
+      "type": "shell",
+      "command": "npm run electron:pack ",
+      "dependsOn": ["build", "sync electron"],
+      "options": { "cwd": "${workspaceFolder}/electron" }
+    },
+    {
+      "label": "run electron",
+      "type": "shell",
+      "command": "npx cap open @capacitor-community/electron",
+      "dependsOn": ["build", "sync electron"]
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "rm -rf ${workspaceFolder}/android && rm -rf ${workspaceFolder}/build && rm -rf ${workspaceFolder}/release-builds && rm -rf ${workspaceFolder}/electron/app && rm -rf ${workspaceFolder}/electron/build "
+    },
+    {
+      "label": "serve web",
+      "type": "shell",
+      "command": "npx ionic serve"
+    },
+    {
+      "label": "start socket.io server",
+      "type": "shell",
+      "command": "node server.js"
+    }
+  ]
+}

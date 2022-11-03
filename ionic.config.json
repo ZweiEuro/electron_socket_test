@@ -1,0 +1,7 @@
+{
+  "name": "electron_socket_test",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
